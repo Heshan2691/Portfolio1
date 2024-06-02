@@ -8,6 +8,7 @@
 
     <ul>
       <li v-for="project in projects" :key="project.name">
+        <h2>{{ project._id }}</h2>
         <h2>{{ project.name }}</h2>
         <p>{{ project.description }}</p>
       </li>
@@ -38,12 +39,15 @@
     <form @submit.prevent="updateProject">
       <div>
         <label for="updateId">Project ID:</label>
-        <input
-          type="text"
-          id="updateId"
-          v-model="updateProjectData.id"
-          required
-        />
+        <select id="updateId" v-model="updateProjectData.id" required>
+          <option
+            v-for="project in projects"
+            :key="project.id"
+            :value="project._id"
+          >
+            {{ project._id }}
+          </option>
+        </select>
       </div>
       <div>
         <label for="updateName">Project Name:</label>
@@ -67,20 +71,23 @@
   </div>
 
   <div>
-      <h1>Delete a project</h1>
-      <form @submit.prevent="deleteProject">
-        <div>
-          <label for="deleteId">Project ID:</label>
-          <input
-            type="text"
-            id="deleteId"
-            v-model="deleteProjectData.id"
-            required
-          />
-        </div>
-        <button type="submit">Delete Project</button>
-      </form>
-    </div>
+    <h1>Delete a project</h1>
+    <form @submit.prevent="deleteProject">
+      <div>
+        <label for="deleteId">Project ID:</label>
+        <select id="deleteId" v-model="deleteProjectData.id" required>
+          <option
+            v-for="project in projects"
+            :key="project.id"
+            :value="project._id"
+          >
+            {{ project.name }}
+          </option>
+        </select>
+      </div>
+      <button type="submit">Delete Project</button>
+    </form>
+  </div>
 
   <div v-if="pendingBlogs">Loading blogs...</div>
   <div>
@@ -127,7 +134,6 @@ const fetchProjects = async () => {
   const response = await fetch("http://localhost:5000/projects");
   projects.value = await response.json();
 };
-
 
 const createProject = async () => {
   try {
